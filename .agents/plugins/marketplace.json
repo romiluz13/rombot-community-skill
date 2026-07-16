@@ -1,0 +1,20 @@
+{
+  "name": "rombot-community-skill",
+  "interface": {
+    "displayName": "rombot-community"
+  },
+  "plugins": [
+    {
+      "name": "rombot-community",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/romiluz13/rombot-community-skill.git"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Research"
+    }
+  ]
+}
