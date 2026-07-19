@@ -50,7 +50,7 @@ def do_setup() -> int:
     """Interactive setup — writes ~/.config/rombot-ask/.env."""
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     print("RomBot Community Ask setup")
-    url = input("RomBot endpoint URL (e.g. https://rombot.example.com/api/community-ask): ").strip()
+    url = input("RomBot endpoint URL (e.g. https://api.rombot.uk/api/community-ask): ").strip()
     token = input("Your developer token: ").strip()
     if not url or not token:
         print("Error: both URL and token are required.", file=sys.stderr)
@@ -77,6 +77,7 @@ def ask(question: str, as_json: bool, timeout: int) -> int:
         headers={
             "Content-Type": "application/json",
             "X-Community-Ask-Token": token,
+            "User-Agent": "rombot-ask/0.2 (+https://github.com/romiluz13/rombot-community-skill)",
         },
     )
 
