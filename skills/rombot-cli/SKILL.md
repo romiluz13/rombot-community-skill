@@ -1,8 +1,8 @@
 ---
-name: rombot-community
-version: "0.1.0"
+name: rombot-cli
+version: "0.2.0"
 description: "Ask the AI Agents community brain a question — get grounded, cited answers from ~4,000 members' tips, repos, discussions, and gotchas while you code."
-argument-hint: "ask the AI Agents community brain | /rombot-community best practices for claude code hooks | /rombot-community what repos people use for X"
+argument-hint: "ask the AI Agents community brain | /rombot-cli best practices for claude code hooks | /rombot-cli what repos people use for X"
 allowed-tools: Bash, Read
 user-invocable: true
 metadata:
@@ -10,8 +10,8 @@ metadata:
     emoji: "🤖"
     requires:
       env:
-        - ROMBOT_ASK_TOKEN
-        - ROMBOT_ASK_URL
+        - ROMBOT_CLI_TOKEN
+        - ROMBOT_CLI_URL
       bins:
         - python3
     tags:
@@ -27,7 +27,7 @@ metadata:
       - clawhub
 ---
 
-# RomBot Community
+# RomBot CLI
 
 Ask the AI Agents community brain a question from inside your coding agent. Get grounded, cited answers from ~4,000 members' tips, repos, discussions, and gotchas.
 
@@ -37,9 +37,10 @@ Use when you want community-grounded knowledge on a coding/agent topic: best pra
 
 ## Setup
 
-1. **Get a token** — contact Rom (DM RomBot on WhatsApp asking for a developer token). Rom issues it via the owner-operated `/issue-dev-token` command.
-2. **Configure** — run `python3 scripts/rombot-ask.py setup` and enter the endpoint URL + your token. This writes `~/.config/rombot-ask/.env`.
-3. **Ask** — `/rombot-community <question>` in your coding agent.
+1. **Install** — `npx skills add romiluz13/rombot-community-skill`
+2. **Get a token** — send `/rombot-cli` to **RomBot** on WhatsApp. You'll get a token tied to your phone number (self-service — no need to ask Rom).
+3. **Configure** — run `python3 scripts/rombot-ask.py setup` and paste your token when prompted. This writes `~/.config/rombot-cli/.env`.
+4. **Ask** — `/rombot-cli <question>` in your coding agent.
 
 ## How to call
 

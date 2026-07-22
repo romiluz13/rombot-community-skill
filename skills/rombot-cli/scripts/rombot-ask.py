@@ -4,9 +4,9 @@
 Usage:
   rombot-ask.py "<question>"          # prints the answer to stdout
   rombot-ask.py "<question>" --json   # full {answer, model, latency_ms}
-  rombot-ask.py setup                 # writes ~/.config/rombot-ask/.env
+  rombot-ask.py setup                 # writes ~/.config/rombot-cli/.env
 
-Reads ROMBOT_ASK_URL + ROMBOT_ASK_TOKEN from env or ~/.config/rombot-ask/.env.
+Reads ROMBOT_CLI_URL + ROMBOT_CLI_TOKEN from env or ~/.config/rombot-cli/.env.
 Sends the dev-token in the X-Community-Ask-Token header (NOT Authorization).
 Exit codes: 0 success, 1 no answer, 2 auth failed (401), 3 rate limited (429),
 4 not configured.
@@ -21,16 +21,16 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-CONFIG_DIR = Path.home() / ".config" / "rombot-ask"
+CONFIG_DIR = Path.home() / ".config" / "rombot-cli"
 CONFIG_FILE = CONFIG_DIR / ".env"
 DEFAULT_TIMEOUT = 90
 
 
 def load_env() -> dict[str, str]:
-    """Load ROMBOT_ASK_URL + ROMBOT_ASK_TOKEN from env or ~/.config/rombot-ask/.env."""
+    """Load ROMBOT_CLI_URL + ROMBOT_CLI_TOKEN from env or ~/.config/rombot-cli/.env."""
     env = {}
     # env vars take precedence
-    for key in ("ROMBOT_ASK_URL", "ROMBOT_ASK_TOKEN"):
+    for key in ("ROMBOT_CLI_URL", "ROMBOT_CLI_TOKEN"):
         val = os.environ.get(key)
         if val:
             env[key] = val
@@ -47,15 +47,19 @@ def load_env() -> dict[str, str]:
 
 
 def do_setup() -> int:
-    """Interactive setup — writes ~/.config/rombot-ask/.env."""
+    """Interactive setup — writes ~/.config/rombot-cli/.env."""
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    print("RomBot Community Ask setup")
+    print("RomBot CLI setup")
     url = input("RomBot endpoint URL (e.g. https://api.rombot.uk/api/community-ask): ").strip()
-    token = input("Your developer token: ").strip()
+    token = input("Your token (send /rombot-cli to RomBot on WhatsApp to get one): ").strip()
     if not url or not token:
-        print("Error: both URL and token are required.", file=sys.stderr)
+        print(
+            "Error: both URL and token are required. "
+            "Send /rombot-cli to RomBot on WhatsApp to get a token.",
+            file=sys.stderr,
+        )
         return 4
-    CONFIG_FILE.write_text(f'ROMBOT_ASK_URL="{url}"\nROMBOT_ASK_TOKEN="{token}"\n')
+    CONFIG_FILE.write_text(f'ROMBOT_CLI_URL="{url}"\nROMBOT_CLI_TOKEN="{token}"\n')
     CONFIG_FILE.chmod(0o600)
     print(f"Config written to {CONFIG_FILE}")
     return 0
@@ -63,10 +67,14 @@ def do_setup() -> int:
 
 def ask(question: str, as_json: bool, timeout: int) -> int:
     env = load_env()
-    url = env.get("ROMBOT_ASK_URL")
-    token = env.get("ROMBOT_ASK_TOKEN")
+    url = env.get("ROMBOT_CLI_URL")
+    token = env.get("ROMBOT_CLI_TOKEN")
     if not url or not token:
-        print("Not configured. Run: rombot-ask.py setup", file=sys.stderr)
+        print(
+            "Not configured. Run: rombot-ask.py setup "
+            "(send /rombot-cli to RomBot on WhatsApp to get a token)",
+            file=sys.stderr,
+        )
         return 4
 
     body = json.dumps({"message": question}).encode("utf-8")
@@ -77,7 +85,7 @@ def ask(question: str, as_json: bool, timeout: int) -> int:
         headers={
             "Content-Type": "application/json",
             "X-Community-Ask-Token": token,
-            "User-Agent": "rombot-ask/0.2 (+https://github.com/romiluz13/rombot-community-skill)",
+            "User-Agent": "rombot-cli/0.2 (+https://github.com/romiluz13/rombot-community-skill)",
         },
     )
 

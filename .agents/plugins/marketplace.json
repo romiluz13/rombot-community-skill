@@ -1,11 +1,11 @@
 {
   "name": "rombot-community-skill",
   "interface": {
-    "displayName": "rombot-community"
+    "displayName": "rombot-cli"
   },
   "plugins": [
     {
-      "name": "rombot-community",
+      "name": "rombot-cli",
       "source": {
         "source": "url",
         "url": "https://github.com/romiluz13/rombot-community-skill.git"

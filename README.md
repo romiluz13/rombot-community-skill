@@ -1,8 +1,8 @@
-# 🤖 RomBot Community
+# 🤖 RomBot CLI — AI Agents Community Knowledge
 
 **Ask the AI Agents community brain a question — get grounded, cited answers from ~4,000 developers' real-world experience, right inside your coding agent.**
 
-[![Status: Alpha](https://img.shields.io/badge/status-alpha-orange)](#status)
+[![Status: Active](https://img.shields.io/badge/status-active-brightgreen)](#status)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Python 3](https://img.shields.io/badge/python-3.x-blue)](#quickstart)
 
@@ -12,7 +12,7 @@
 
 Every coding agent can search the web. But web search finds blog posts, docs, and marketing pages — not the **hard-won, battle-tested knowledge** that lives in community conversations. The gotchas people hit at 2am. The repos that actually work vs. the ones that look good on paper. The config that breaks in production. That knowledge is locked in private Discord/WhatsApp groups, invisible to your agent.
 
-RomBot Community unlocks it. The AI Agents community (~4,000 developers across 4 WhatsApp groups) has been discussing AI coding tools, agent architectures, model comparisons, and real-world deployment for months. This skill lets your coding agent ask that community brain a question and get back a **grounded, cited answer** — with who said it, which group, when, and links to repos or resources mentioned.
+RomBot CLI unlocks it. The AI Agents community (~4,000 developers across 4 WhatsApp groups) has been discussing AI coding tools, agent architectures, model comparisons, and real-world deployment for months. This skill lets your coding agent ask that community brain a question and get back a **grounded, cited answer** — with who said it, which group, when, and links to repos or resources mentioned.
 
 ---
 
@@ -69,39 +69,34 @@ Every claim is sourced. Every recommendation ties to a real person, a real date,
 
 ## Quickstart
 
-### 1. Get a token
-
-DM **RomBot** on WhatsApp and ask for a developer token. Rom issues it via the owner-operated command (tokens are SHA-256 hashed, phone-tied, revocable).
-
-### 2. Install + configure
+### 1. Install the skill
 
 ```bash
-# Clone the skill repo
-git clone https://github.com/romiluz13/rombot-community-skill.git
-
-# Configure (enter your endpoint URL + token)
-python3 rombot-community-skill/skills/rombot-community/scripts/rombot-ask.py setup
+npx skills add romiluz13/rombot-community-skill
 ```
 
-Or install via your agent's skill marketplace:
+Works in Claude Code, Codex, Pi, Cursor, and any harness that watches `.agents/skills/`.
 
-| Harness | Install command |
-|---|---|
-| **Claude Code** | `/plugin marketplace add romiluz13/rombot-community-skill` |
-| **Codex** | `npx skills add https://github.com/romiluz13/rombot-community-skill` |
-| **Pi** | Add to `~/.agents/skills/` or use the marketplace manifest |
-| **Cursor** | Settings → Features → MCP → add the skill |
+### 2. Get a token
 
-### 3. Ask
+Send `/rombot-cli` to **RomBot** on WhatsApp. You'll get a token tied to your phone number — self-service, no need to ask Rom.
+
+### 3. Configure + ask
 
 ```bash
-# Direct CLI
-python3 rombot-ask.py "What repos do people use for AI agent memory?"
+# Configure (paste your token when prompted)
+python3 skills/rombot-cli/scripts/rombot-ask.py setup
 
-# In your coding agent
-/rombot-community best practices for Claude Code hooks
-/rombot-community what model works best for coding agents
-/rombot-community how to handle context window limits
+# Ask
+python3 rombot-ask.py "What repos do people use for AI agent memory?"
+```
+
+In your coding agent:
+
+```
+/rombot-cli best practices for Claude Code hooks
+/rombot-cli what model works best for coding agents
+/rombot-cli how to handle context window limits
 ```
 
 The answer prints to stdout — your coding agent passes it through **verbatim** (don't reword, summarize, or translate — the citations matter).
@@ -131,8 +126,8 @@ The gateway is **never directly exposed**. Cloudflare Tunnel connects outbound o
 
 | Env var | Where | Description |
 |---|---|---|
-| `ROMBOT_ASK_URL` | `~/.config/rombot-ask/.env` or env | Endpoint URL (default: `https://api.rombot.uk/api/community-ask`) |
-| `ROMBOT_ASK_TOKEN` | `~/.config/rombot-ask/.env` or env | Your developer bearer token |
+| `ROMBOT_CLI_URL` | `~/.config/rombot-cli/.env` or env | Endpoint URL (default: `https://api.rombot.uk/api/community-ask`) |
+| `ROMBOT_CLI_TOKEN` | `~/.config/rombot-cli/.env` or env | Your developer bearer token |
 
 **Flags:** `--json` (full `{answer, model, latency_ms}` shape) · `--timeout <s>` (default 90s)
 
@@ -142,7 +137,7 @@ The gateway is **never directly exposed**. Cloudflare Tunnel connects outbound o
 
 ## Status
 
-**Alpha** — the endpoint is live and answering real questions, but token issuance is owner-operated (Rom issues tokens manually). Self-serve signup is planned for phase 2.
+**Active** — the endpoint is live and answering real questions. Token issuance is self-service: send `/rombot-cli` to RomBot on WhatsApp to get a token tied to your phone number.
 
 Rate limits: 10 requests/hour per token, 50/day. The community corpus is read-only — the agent cannot write, execute commands, or access private sessions.
 
