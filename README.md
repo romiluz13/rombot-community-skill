@@ -79,7 +79,7 @@ Works in Claude Code, Codex, Pi, Cursor, and any harness that watches `.agents/s
 
 ### 2. Get a token
 
-Send `/rombot-cli` to **RomBot** on WhatsApp. You'll get a token tied to your phone number — self-service, no need to ask Rom.
+Send `/rombot-cli` to **RomBot** on WhatsApp (**+972 55-987-4713**). You'll get a token tied to your phone number — self-service, no need to ask Rom.
 
 ### 3. Configure + ask
 
