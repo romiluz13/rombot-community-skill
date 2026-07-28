@@ -23,6 +23,9 @@ from pathlib import Path
 
 CONFIG_DIR = Path.home() / ".config" / "rombot-cli"
 CONFIG_FILE = CONFIG_DIR / ".env"
+# The URL is optional in `setup`: a blank answer uses this default, so a user
+# who only has a token can press Enter. Only the token is required.
+DEFAULT_URL = "https://api.rombot.uk/api/community-ask"
 DEFAULT_TIMEOUT = 90
 
 
@@ -47,15 +50,35 @@ def load_env() -> dict[str, str]:
 
 
 def do_setup() -> int:
-    """Interactive setup — writes ~/.config/rombot-cli/.env."""
+    """Write ~/.config/rombot-cli/.env from the environment or interactive prompts.
+
+    When the token is already in the environment, writes the config
+    non-interactively (no prompts) — this is how a coding agent drives setup:
+    it exports the token in its shell and runs `setup`. When the token is
+    absent, falls back to the interactive prompts for a human at a terminal.
+
+    The URL is optional (blank/empty uses DEFAULT_URL); only a missing token
+    is an error. Tokens are issued by RomBot on WhatsApp — never guessed.
+    """
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Env-aware path: the agent exports the token; skip the prompts entirely.
+    env_token = os.environ.get("ROMBOT_CLI_TOKEN", "").strip()
+    if env_token:
+        url = os.environ.get("ROMBOT_CLI_URL", "").strip() or DEFAULT_URL
+        token = env_token
+        CONFIG_FILE.write_text(f'ROMBOT_CLI_URL="{url}"\nROMBOT_CLI_TOKEN="{token}"\n')
+        CONFIG_FILE.chmod(0o600)
+        print(f"Config written to {CONFIG_FILE}")
+        return 0
+
+    # Interactive path: a human at a terminal.
     print("RomBot CLI setup")
-    url = input("RomBot endpoint URL (e.g. https://api.rombot.uk/api/community-ask): ").strip()
+    url = input(f"RomBot endpoint URL (blank = {DEFAULT_URL}): ").strip() or DEFAULT_URL
     token = input("Your token (send /rombot-cli to RomBot on WhatsApp to get one): ").strip()
-    if not url or not token:
+    if not token:
         print(
-            "Error: both URL and token are required. "
-            "Send /rombot-cli to RomBot on WhatsApp to get a token.",
+            "Error: a token is required. Send /rombot-cli to RomBot on WhatsApp to get one.",
             file=sys.stderr,
         )
         return 4
@@ -137,7 +160,14 @@ def main() -> int:
             as_json = True
         elif arg == "--timeout":
             i += 1
-            timeout = int(args[i]) if i < len(args) else DEFAULT_TIMEOUT
+            if i >= len(args):
+                print("Error: --timeout requires a value.", file=sys.stderr)
+                return 1
+            try:
+                timeout = int(args[i])
+            except ValueError:
+                print(f"Error: --timeout needs a number, got {args[i]!r}.", file=sys.stderr)
+                return 1
         else:
             question_parts.append(arg)
         i += 1

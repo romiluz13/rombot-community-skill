@@ -8,12 +8,8 @@ user-invocable: true
 metadata:
   openclaw:
     emoji: "🤖"
-    requires:
-      env:
-        - ROMBOT_CLI_TOKEN
-        - ROMBOT_CLI_URL
-      bins:
-        - python3
+    bins:
+      - python3
     tags:
       - community
       - knowledge-base
@@ -37,14 +33,22 @@ Use when you want community-grounded knowledge on a coding/agent topic: best pra
 
 ## Setup
 
-1. **Install** — `npx skills add romiluz13/rombot-community-skill`
-2. **Get a token** — send `/rombot-cli` to **RomBot** on WhatsApp. You'll get a token tied to your phone number (self-service — no need to ask Rom).
-3. **Configure** — run `python3 scripts/rombot-ask.py setup` and paste your token when prompted. This writes `~/.config/rombot-cli/.env`.
-4. **Ask** — `/rombot-cli <question>` in your coding agent.
+You — the coding agent — drive setup. The human never opens a terminal for the skill.
 
-## How to call
+1. **Install the skill** (if not already installed): `npx skills add romiluz13/rombot-community-skill`.
+2. **Check whether the skill is configured.** Run `python3 scripts/rombot-ask.py "test"`. If it exits `4` ("Not configured"), the skill is not set up — proceed to step 3. If it runs, skip to **Asking a question**.
+3. **Get a token from the human.** Ask the human: "Send `/rombot-cli` to **RomBot** on WhatsApp to get a token, then paste it here." The token is tied to the human's phone number — the agent cannot get it; the human is the only one who can. Wait for the human to paste the token into the chat.
+4. **Configure the skill yourself.** With the token the human pasted, run setup so the token is in the environment (the CLI reads it from there and writes the config non-interactively, no prompts):
+   ```bash
+   ROMBOT_CLI_TOKEN=<the token> python3 scripts/rombot-ask.py setup
+   ```
+   This writes `~/.config/rombot-cli/.env` with the token and the default endpoint URL.
+5. **Verify the skill is configured.** Re-run step 2 (`python3 scripts/rombot-ask.py "test"`). If it now runs (exit `0`), setup succeeded — proceed to **Asking a question**. If it still exits `4` ("Not configured"), setup failed — re-run step 4.
+6. **Ask.** You're now configured — proceed to **Asking a question**.
 
-Run the CLI via Bash:
+## Asking a question
+
+With the skill configured (above), run the CLI via Bash:
 
 ```bash
 python3 scripts/rombot-ask.py "<question>"

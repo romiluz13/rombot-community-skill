@@ -57,13 +57,13 @@ Every claim is sourced. Every recommendation ties to a real person, a real date,
 
 ## 🎯 Capability pillars
 
-| Pillar | What it means |
-|---|---|
-| 🧠 **Community-grounded** | Answers mined from ~4,000 developers' real conversations, not web scrapes or synthetic data |
-| 📎 **Cite-or-die** | Every claim cites who said it, when, in which group, with links to repos/resources |
+| Pillar                       | What it means                                                                                                        |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 🧠 **Community-grounded**    | Answers mined from ~4,000 developers' real conversations, not web scrapes or synthetic data                          |
+| 📎 **Cite-or-die**           | Every claim cites who said it, when, in which group, with links to repos/resources                                   |
 | 🔒 **Constrained retrieval** | The agent can ONLY query the public community corpus + KB — never session chunks, private data, or unrelated sources |
-| 🔌 **Agent-agnostic** | Works in Claude Code, Codex, Pi, Cursor, and any Agent Skills-compatible harness |
-| 🛡️ **Production-hardened** | Per-user token auth, rate limiting, in-flight caps, 60s timeout, PII-redacted audit, Cloudflare DDoS protection |
+| 🔌 **Agent-agnostic**        | Works in Claude Code, Codex, Pi, Cursor, and any Agent Skills-compatible harness                                     |
+| 🛡️ **Production-hardened**   | Per-user token auth, rate limiting, in-flight caps, 60s timeout, PII-redacted audit, Cloudflare DDoS protection      |
 
 ---
 
@@ -79,17 +79,17 @@ Works in Claude Code, Codex, Pi, Cursor, and any harness that watches `.agents/s
 
 ### 2. Get a token
 
-Send `/rombot-cli` to **RomBot** on WhatsApp (**+972 55-987-4713**). You'll get a token tied to your phone number — self-service, no need to ask Rom.
+Send `/rombot-cli` to **RomBot** on WhatsApp. You'll get a token tied to your phone number — self-service, no need to ask Rom.
 
-### 3. Configure + ask
+### 3. Set up — tell your agent
 
-```bash
-# Configure (paste your token when prompted)
-python3 skills/rombot-cli/scripts/rombot-ask.py setup
+Your coding agent handles setup. Don't open a terminal. Tell your agent:
 
-# Ask
-python3 rombot-ask.py "What repos do people use for AI agent memory?"
-```
+> Set up rombot-cli, here's my token: <paste your token>
+
+The agent runs `setup` with your token, writes the config (`~/.config/rombot-cli/.env`), and verifies it. You're done.
+
+### 4. Ask
 
 In your coding agent:
 
@@ -99,7 +99,23 @@ In your coding agent:
 /rombot-cli how to handle context window limits
 ```
 
-The answer prints to stdout — your coding agent passes it through **verbatim** (don't reword, summarize, or translate — the citations matter).
+The agent asks RomBot's community brain and passes the answer through **verbatim** (don't reword, summarize, or translate — the citations matter).
+
+---
+
+## Manual / debugging
+
+If your agent isn't available, or you're debugging the install, you can run the CLI directly:
+
+```bash
+# Configure (press Enter for the default URL, then paste your token)
+python3 skills/rombot-cli/scripts/rombot-ask.py setup
+
+# Ask
+python3 rombot-ask.py "What repos do people use for AI agent memory?"
+```
+
+This is not the primary path — prefer the agent-driven flow above.
 
 ---
 
@@ -124,10 +140,10 @@ The gateway is **never directly exposed**. Cloudflare Tunnel connects outbound o
 
 ## Configuration
 
-| Env var | Where | Description |
-|---|---|---|
-| `ROMBOT_CLI_URL` | `~/.config/rombot-cli/.env` or env | Endpoint URL (default: `https://api.rombot.uk/api/community-ask`) |
-| `ROMBOT_CLI_TOKEN` | `~/.config/rombot-cli/.env` or env | Your developer bearer token |
+| Env var            | Where                              | Description                                                       |
+| ------------------ | ---------------------------------- | ----------------------------------------------------------------- |
+| `ROMBOT_CLI_URL`   | `~/.config/rombot-cli/.env` or env | Endpoint URL (default: `https://api.rombot.uk/api/community-ask`) |
+| `ROMBOT_CLI_TOKEN` | `~/.config/rombot-cli/.env` or env | Your developer bearer token                                       |
 
 **Flags:** `--json` (full `{answer, model, latency_ms}` shape) · `--timeout <s>` (default 90s)
 
