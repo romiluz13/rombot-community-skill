@@ -18,40 +18,31 @@ RomBot CLI unlocks it. The AI Agents community (~4,000 developers across 4 Whats
 
 ## Proof it works
 
-Ask a real question, get a real answer with citations:
+Ask a real question through the skill, get a grounded, cited answer:
 
 ```
-$ python3 rombot-ask.py "What's the best practice for Claude Code hooks?"
+❯ /rombot-cli what's the best model for coding agents
 
-To set up Claude Code hooks like a pro, you need to configure them to serve
-three distinct functions: Security Guardrails, Fatigue Reduction, and
-Context Management.
+⏺ Skill(rombot-cli) — loaded
 
-### 1. The Pre-Execution Guard (Blocking rm -rf)
-Running Claude Code with --dangerously-skip-permissions is tempting but
-disastrous. After a community member (Daniel, June 2026) had Claude execute
-an accidental rm -rf that wiped his workplace, consensus shifted to enforcing
-local guardrails.
+**Claude Sonnet** is the community's go-to for coding agents, hands down.
+Guy B says Sonnet 5 "works like a bomb with no unnecessary chatter"
+(26 Jul 2026). Idan Shimon: "for code? Sonnet, Opus" (22 Feb 2026).
 
-Best Practice: Use a local pre-run script hook to inspect commands before
-Claude executes them.
-Community Evidence: Shimon Moyal (June 2026) recommended claude-code-rm-guard
-(github.com/elertan/claude-code-rm-guard) as a pre-execution shield.
+**Strong contender — GPT via Codex:** Ido Ben Ari said his experience with
+Codex + GPT 5.3 was *better* than Claude Opus 4.6 (12 Feb 2026). Yogev
+downgraded Claude Code spend from $200→$100 and upgraded Codex $20→$100:
+"GPT models are much more efficient than Opus" (19 Jun 2026).
 
-### 2. Tuning Confirmation Fatigue
-Tal F and Uval Vered (February 2026) suggest declaring trusted safe commands
-under AllowedTools in .claude/settings.local.json...
+**Skip for coding agents:** Google Gemini — Ziv put it bluntly: "good for
+chatbots, very bad at instruction following and tool calls" (22 Feb 2026).
+Rom Iluz agreed.
 
-### 3. Session Interception: The Pre-Compact Hook
-Tal F (April 2026) shared a PreCompact hook pattern allowing you to read raw
-context .jsonl session files right before compaction takes place...
-
-Caveats: Anthropic's strict security boundaries limit Claude Code hooks from
-communicating with external networks (Guy, February 2026). Git integration
-often fails due to config mismatches (Noam, January 2026).
+**Bottom line:** Start with Sonnet 5. Complexity walls → Opus.
+Budget-conscious → GPT 5.3 via Codex. Skip Google for agentic coding.
 ```
 
-Every claim is sourced. Every recommendation ties to a real person, a real date, a real repo. No hallucinated metrics, no invented best practices — just what the community actually said.
+Every claim is sourced — who said it, when, with the repo or context. No hallucinated metrics, no invented best practices — just what the community actually said.
 
 ---
 
@@ -131,7 +122,7 @@ graph LR
     F -->|token auth + rate limit| G[community-ask agent]
     G -->|community_search only| H[(MongoDB community corpus)]
     H -->|cited answer| F
-    F -->|{answer, model, latency_ms}| B
+    F -->|JSON: answer, model, latency_ms| B
 ```
 
 The gateway is **never directly exposed**. Cloudflare Tunnel connects outbound only — no open ports, no sudo, automatic HTTPS.
