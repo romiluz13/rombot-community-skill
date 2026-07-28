@@ -1,5 +1,7 @@
 # 🤖 RomBot CLI — AI Agents Community Knowledge
 
+![RomBot CLI — the community brain](assets/rombot-cli-hero.jpg)
+
 **Ask the AI Agents community brain a question — get grounded, cited answers from ~4,000 developers' real-world experience, right inside your coding agent.**
 
 [![Status: Active](https://img.shields.io/badge/status-active-brightgreen)](#status)
